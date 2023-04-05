@@ -12,3 +12,4 @@ This is an **educational project**
     export AIRFLOW__CORE__LOAD_EXAMPLES=False
     pip install apache-airflow
     airflow db init
+    airflow scheduler
