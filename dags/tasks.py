@@ -19,7 +19,7 @@ def data_processing():
     final[cols] = final[cols].fillna(final[cols].mean())
     final.to_csv('iris_dataset.clean.csv')
 
-def ml_training_RandomForest(**kwargs):
+def ml_training_randomforest(**kwargs):
     final = pd.read_csv('iris_dataset.clean.csv', index_col=0)
     X_train, X_test, y_train, y_test = train_test_split(final.iloc[:,0:4], final.iloc[:,-1], test_size=0.3)
     classifier = RandomForestClassifier(n_estimators=100)
@@ -29,7 +29,7 @@ def ml_training_RandomForest(**kwargs):
     print(f'Accuracy: {acc}')
     kwargs['ti'].xcom_push(key='model_accuracy', value=acc)
 
-def ml_training_Logisitic(**kwargs):
+def ml_training_logisitic(**kwargs):
     final = pd.read_csv('iris_dataset.clean.csv', index_col=0)
     X_train, X_test, y_train, y_test = train_test_split(final.iloc[:,0:4], final.iloc[:,-1], test_size=0.3)
     logistic_regression = LogisticRegression(multi_class='ovr')
