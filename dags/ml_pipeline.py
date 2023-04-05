@@ -15,8 +15,8 @@ with DAG(dag_id='ml', default_args=args, schedule=None) as dag:
 
     task_extract_data = PythonOperator(task_id='download_dataset', python_callable=download_dataset)
     task_process_data = PythonOperator(task_id='data_processing', python_callable=data_processing)
-    task_train_rf_model = PythonOperator(task_id='ml_training_RandomForest', python_callable=ml_training_randomforest)
-    task_train_lr_model = PythonOperator(task_id='ml_training_Logisitic', python_callable=ml_training_logisitic)
+    task_train_rf_model = PythonOperator(task_id='training_randomforest', python_callable=ml_training_randomforest)
+    task_train_lr_model = PythonOperator(task_id='training_logisitic', python_callable=ml_training_logisitic)
     task_identify_best_model = PythonOperator(task_id='identify_best_model', python_callable=identify_best_model)
 
 
