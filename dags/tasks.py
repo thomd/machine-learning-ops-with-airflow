@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score
 
 import pandas as pd
 import numpy as np
+import pickle
 
 def download_dataset():
     iris = load_iris()
@@ -22,24 +23,29 @@ def data_processing():
 def ml_training_randomforest(**kwargs):
     data = pd.read_csv('iris_dataset.clean.csv', index_col=0)
     X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,0:4], data.iloc[:,-1], test_size=0.3)
-    classifier = RandomForestClassifier(n_estimators=100)
-    classifier.fit(X_train, y_train)
-    y_pred = classifier.predict(X_test)
+    rf_classifier = RandomForestClassifier(n_estimators=100)
+    rf_classifier.fit(X_train, y_train)
+    y_pred = rf_classifier.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {acc}')
+    print(f'accuracy random-forrest: {acc}')
     kwargs['ti'].xcom_push(key='model_accuracy', value=acc)
+    pickle.dump(rf_classifier, open(f'model_randomforrest_{acc}.pickle', 'wb'))
 
 def ml_training_logistic(**kwargs):
     data = pd.read_csv('iris_dataset.clean.csv', index_col=0)
     X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,0:4], data.iloc[:,-1], test_size=0.3)
-    logistic_regression = LogisticRegression(multi_class='ovr')
-    lr = logistic_regression.fit(X_train, y_train)
-    y_pred = lr.predict(X_test)
+    lr_classifier = LogisticRegression(multi_class='ovr')
+    lr_classifier.fit(X_train, y_train)
+    y_pred = lr_classifier.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {acc}')
+    print(f'accuracy logistic regression: {acc}')
     kwargs['ti'].xcom_push(key='model_accuracy', value=acc)
+    pickle.dump(lr_classifier, open(f'model_logisticregression_{acc}.pickle', 'wb'))
 
 def identify_best_model(**kwargs):
     ti = kwargs['ti']
-    fetched_accuracies = ti.xcom_pull(key='model_accuracy', task_ids=['ml_training_randomforest', 'ml_training_logisitic'])
-    print(f'best model: {fetched_accuracies}')
+    rf_acc = ti.xcom_pull(key='model_accuracy', task_ids=['train_randomforest'])
+    lr_acc = ti.xcom_pull(key='model_accuracy', task_ids=['train_logistic'])
+    with open('accuracy.txt', 'w') as f:
+        f.write(f'random forest accuracy: {rf_acc[0]}\n')
+        f.write(f'logistic regression accuracy: {lr_acc[0]}')

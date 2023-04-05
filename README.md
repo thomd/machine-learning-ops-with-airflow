@@ -1,8 +1,11 @@
 # Machine Learning Training using Apache Airflow
 
-This is an **educational project**
+This is an **educational project** and **proof-of-concept**.
 
-## Pipeline
+The pipeline trains a **Random Forest classifier** and a **Logistic Regression classifier** using the 
+[Iris flower dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set) and identifies the best model by accuracy.
+
+## ML Pipeline
 
 ```
 airflow dags show ml | sed 1d | graph-easy --as=boxart
@@ -29,3 +32,9 @@ airflow dags show ml | sed 1d | graph-easy --as=boxart
     pip install apache-airflow numpy pandas scikit-learn
     airflow db init
     airflow scheduler
+
+## Train
+
+    airflow dags unpause ml
+    airflow dags trigger ml
+    cat accuracy.txt

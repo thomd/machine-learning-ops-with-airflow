@@ -3,3 +3,6 @@ airflow.cfg
 airflow-*
 logs/
 webserver_config.py
+*.csv
+*.pickle
+accuracy.txt
