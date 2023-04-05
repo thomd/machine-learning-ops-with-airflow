@@ -2,8 +2,6 @@ from datetime import timedelta
 from airflow import DAG
 
 from airflow.operators.python import PythonOperator
-from airflow.operators.empty import EmptyOperator
-from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
 from tasks import download_dataset, data_processing, ml_training_randomforest, ml_training_logisitic, identify_best_model
 
@@ -15,7 +13,6 @@ args = {
 
 with DAG(dag_id='ml', default_args=args, schedule=None) as dag:
 
-    dummy_task = EmptyOperator(task_id='Starting_the_process', retries=2)
     task_extract_data = PythonOperator(task_id='download_dataset', python_callable=download_dataset)
     task_process_data = PythonOperator(task_id='data_processing', python_callable=data_processing)
     task_train_rf_model = PythonOperator(task_id='ml_training_RandomForest', python_callable=ml_training_randomforest)
@@ -24,5 +21,5 @@ with DAG(dag_id='ml', default_args=args, schedule=None) as dag:
 
 
 # workflow process
-dummy_task >> task_extract_data >> task_process_data >> [task_train_rf_model, task_train_lr_model] >> task_identify_best_model
+task_extract_data >> task_process_data >> [task_train_rf_model, task_train_lr_model] >> task_identify_best_model
 
